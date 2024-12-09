@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulk WhatsApp Messaging</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 450px;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      margin: 0 0 20px 0;
+      color: #333;
+      text-align: center;
+      font-size: 24px;
+    }
+    label {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 5px;
+      display: block;
+    }
+    textarea, input {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+    textarea:focus, input:focus {
+      border-color: #25d366;
+      outline: none;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: background-color 0.3s;
+    }
+    .btn-primary {
+      background-color: #25d366;
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background-color: #1ebe57;
+    }
+    .btn-secondary {
+      background-color: #f44336;
+      color: #ffffff;
+    }
+    .btn-secondary:hover {
+      background-color: #e53935;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Send Bulk WhatsApp Messages</h2>
+    <form id="bulkForm">
+      <label for="numbers">Phone Numbers (comma-separated):</label>
+      <textarea id="numbers" rows="4" placeholder="e.g., 1234567890,9876543210"></textarea>
+      <label for="message">Message:</label>
+      <textarea id="message" rows="4" placeholder="Type your message here..."></textarea>
+      <button type="button" class="btn btn-primary" onclick="sendMessages()">Send Messages</button>
+      <button type="button" class="btn btn-secondary" onclick="removeNumber()">Next</button>
+    </form>
+  </div>
+
+  <script>
+    /**
+     * Function to send WhatsApp messages
+     */
+    async function sendMessages() {
+      const numbersInput = document.getElementById('numbers');
+      const message = encodeURIComponent(document.getElementById('message').value.trim());
+
+      // Validate inputs
+      if (!numbersInput.value.trim() || !message) {
+        alert('Please fill in both the phone numbers and the message.');
+        return;
+      }
+
+      let numbers = numbersInput.value.split(',').map(num => num.trim());
+      numbers = numbers.map(num => {
+        // Add Saudi Arabia country code if not already present
+        if (!num.startsWith('+966')) {
+          if (num.startsWith('0')) {
+            num = num.slice(1); // Remove leading 0
+          }
+          num = '+966' + num; // Add country code
+        }
+        return num;
+      });
+
+      for (let i = 0; i < numbers.length; i++) {
+        const number = numbers[i];
+        if (number) {
+          const url = `https://wa.me/${number}?text=${message}`;
+          window.open(url, '_blank');
+
+          // Wait for 5 seconds before the next message
+          await new Promise(resolve => setTimeout(resolve, 5000));
+        }
+      }
+
+      alert('All messages processed.');
+    }
+
+    /**
+     * Function to remove the first number from the list
+     */
+    function removeNumber() {
+      const numbersInput = document.getElementById('numbers');
+      let numbers = numbersInput.value.split(',').map(num => num.trim());
+
+      if (numbers.length > 0) {
+        numbers.shift(); // Remove the first number
+        numbersInput.value = numbers.join(','); // Update the textarea
+        alert('Moved to the next number!');
+      } else {
+        alert('No numbers left in the list.');
+      }
+    }
+  </script>
+</body>
+</html>
+
