@@ -1,149 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head>https://github.com/quartz-digital-12/web/blob/main/index.html
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bulk WhatsApp Messaging</title>
+  <title>Send Bulk WhatsApp Messages</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f0f2f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f4;
     }
     .container {
-      width: 100%;
-      max-width: 450px;
+      max-width: 400px;
+      margin: 0 auto;
       padding: 20px;
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
-    }
-    h2 {
-      margin: 0 0 20px 0;
-      color: #333;
-      text-align: center;
-      font-size: 24px;
-    }
-    label {
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 5px;
-      display: block;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     textarea, input {
       width: 100%;
       margin-bottom: 15px;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
       font-size: 14px;
-      box-sizing: border-box;
-      transition: border-color 0.3s;
     }
-    textarea:focus, input:focus {
-      border-color: #25d366;
-      outline: none;
-    }
-    .btn {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-bottom: 10px;
-      transition: background-color 0.3s;
-    }
-    .btn-primary {
+    button {
       background-color: #25d366;
-      color: #ffffff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
     }
-    .btn-primary:hover {
+    button:hover {
       background-color: #1ebe57;
     }
-    .btn-secondary {
-      background-color: #f44336;
-      color: #ffffff;
-    }
-    .btn-secondary:hover {
-      background-color: #e53935;
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Send Bulk WhatsApp Messages</h2>
+    <h2>Bulk WhatsApp Messages</h2>
     <form id="bulkForm">
-      <label for="numbers">Phone Numbers (comma-separated):</label>
-      <textarea id="numbers" rows="4" placeholder="e.g., 1234567890,9876543210"></textarea>
-      <label for="message">Message:</label>
-      <textarea id="message" rows="4" placeholder="Type your message here..."></textarea>
-      <button type="button" class="btn btn-primary" onclick="sendMessages()">Send Messages</button>
-      <button type="button" class="btn btn-secondary" onclick="removeNumber()">Next</button>
+      <label for="numbers">Enter phone numbers (comma-separated or unformatted):</label>
+      <textarea id="numbers" rows="5" placeholder="e.g., 1234567890, 9876543210"></textarea>
+      <label for="message">Enter your message:</label>
+      <textarea id="message" rows="5" placeholder="Type your message here..."></textarea>
+      <div class="button-group">
+        <button type="button" onclick="addCommas()">Add Commas</button>
+        <button type="button" onclick="sendMessages()">Next</button>
+      </div>
     </form>
   </div>
 
   <script>
     /**
+     * Function to add commas to the list of numbers
+     */
+    function addCommas() {
+      const numbersInput = document.getElementById('numbers');
+      const rawNumbers = numbersInput.value.trim();
+      if (!rawNumbers) {
+        alert('Please enter some numbers first!');
+        return;
+      }
+
+      // Split by whitespace, new lines, commas, or other separators
+      const formattedNumbers = rawNumbers
+        .split(/[\s,]+/) // Match spaces, commas, or newlines
+        .filter(num => num) // Remove empty strings
+        .map(num => num.replace(/\D/g, '')) // Remove non-numeric characters
+        .map(num => `+966${num}`); // Add Saudi Arabia country code (+966)
+
+      numbersInput.value = formattedNumbers.join(','); // Combine into a comma-separated list
+    }
+
+    /**
      * Function to send WhatsApp messages
      */
     async function sendMessages() {
-      const numbersInput = document.getElementById('numbers');
-      const message = encodeURIComponent(document.getElementById('message').value.trim());
-
-      // Validate inputs
-      if (!numbersInput.value.trim() || !message) {
+      const numbersInput = document.getElementById('numbers'); // Reference to the numbers input field
+      let numbers = numbersInput.value.split(','); // Split numbers into an array
+      const message = encodeURIComponent(document.getElementById('message').value.trim()); // Encode the message
+      
+      // Check if inputs are valid
+      if (!numbers.length || !message) {
         alert('Please fill in both the phone numbers and the message.');
         return;
       }
 
-      let numbers = numbersInput.value.split(',').map(num => num.trim());
-      numbers = numbers.map(num => {
-        // Add Saudi Arabia country code if not already present
-        if (!num.startsWith('+966')) {
-          if (num.startsWith('0')) {
-            num = num.slice(1); // Remove leading 0
-          }
-          num = '+966' + num; // Add country code
-        }
-        return num;
-      });
-
       for (let i = 0; i < numbers.length; i++) {
-        const number = numbers[i];
+        const number = numbers[i].trim(); // Trim whitespace from the number
         if (number) {
-          const url = `https://wa.me/${number}?text=${message}`;
-          window.open(url, '_blank');
+          const url = `https://wa.me/${number}?text=${message}`; // Generate WhatsApp URL
+          window.open(url, '_blank'); // Open the URL in a new tab
+          
+          // Remove the sent number from the list
+          numbers.splice(i, 1); // Remove the current number from the array
+          i--; // Adjust the index after removal
+          numbersInput.value = numbers.join(','); // Update the textarea with the remaining numbers
 
-          // Wait for 5 seconds before the next message
+          // Wait for 5 seconds before processing the next number
           await new Promise(resolve => setTimeout(resolve, 5000));
         }
       }
 
       alert('All messages processed.');
     }
-
-    /**
-     * Function to remove the first number from the list
-     */
-    function removeNumber() {
-      const numbersInput = document.getElementById('numbers');
-      let numbers = numbersInput.value.split(',').map(num => num.trim());
-
-      if (numbers.length > 0) {
-        numbers.shift(); // Remove the first number
-        numbersInput.value = numbers.join(','); // Update the textarea
-        alert('Moved to the next number!');
-      } else {
-        alert('No numbers left in the list.');
-      }
-    }
   </script>
 </body>
 </html>
-
