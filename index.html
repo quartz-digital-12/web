@@ -1,119 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>https://github.com/quartz-digital-12/web/blob/main/index.html
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Send Bulk WhatsApp Messages</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f4f4f4;
-    }
-    .container {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 20px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    textarea, input {
-      width: 100%;
-      margin-bottom: 15px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-    button {
-      background-color: #25d366;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #1ebe57;
-    }
-    .button-group {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-  </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glowing Cards</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h2>Bulk WhatsApp Messages</h2>
-    <form id="bulkForm">
-      <label for="numbers">Enter phone numbers (comma-separated or unformatted):</label>
-      <textarea id="numbers" rows="5" placeholder="e.g., 1234567890, 9876543210"></textarea>
-      <label for="message">Enter your message:</label>
-      <textarea id="message" rows="5" placeholder="Type your message here..."></textarea>
-      <div class="button-group">
-        <button type="button" onclick="addCommas()">Add Commas</button>
-        <button type="button" onclick="sendMessages()">Next</button>
-      </div>
-    </form>
-  </div>
-
-  <script>
-    /**
-     * Function to add commas to the list of numbers
-     */
-    function addCommas() {
-      const numbersInput = document.getElementById('numbers');
-      const rawNumbers = numbersInput.value.trim();
-      if (!rawNumbers) {
-        alert('Please enter some numbers first!');
-        return;
-      }
-
-      // Split by whitespace, new lines, commas, or other separators
-      const formattedNumbers = rawNumbers
-        .split(/[\s,]+/) // Match spaces, commas, or newlines
-        .filter(num => num) // Remove empty strings
-        .map(num => num.replace(/\D/g, '')) // Remove non-numeric characters
-        .map(num => `+966${num}`); // Add Saudi Arabia country code (+966)
-
-      numbersInput.value = formattedNumbers.join(','); // Combine into a comma-separated list
-    }
-
-    /**
-     * Function to send WhatsApp messages
-     */
-    async function sendMessages() {
-      const numbersInput = document.getElementById('numbers'); // Reference to the numbers input field
-      let numbers = numbersInput.value.split(','); // Split numbers into an array
-      const message = encodeURIComponent(document.getElementById('message').value.trim()); // Encode the message
-      
-      // Check if inputs are valid
-      if (!numbers.length || !message) {
-        alert('Please fill in both the phone numbers and the message.');
-        return;
-      }
-
-      for (let i = 0; i < numbers.length; i++) {
-        const number = numbers[i].trim(); // Trim whitespace from the number
-        if (number) {
-          const url = `https://wa.me/${number}?text=${message}`; // Generate WhatsApp URL
-          window.open(url, '_blank'); // Open the URL in a new tab
-          
-          // Remove the sent number from the list
-          numbers.splice(i, 1); // Remove the current number from the array
-          i--; // Adjust the index after removal
-          numbersInput.value = numbers.join(','); // Update the textarea with the remaining numbers
-
-          // Wait for 5 seconds before processing the next number
-          await new Promise(resolve => setTimeout(resolve, 5000));
-        }
-      }
-
-      alert('All messages processed.');
-    }
-  </script>
+    <div class="header">
+        <img src="logo.png" alt="Logo">
+    </div>
+    <div class="main-container">
+        <div class="container">
+            <div class="card">
+                <img src="image/sl1.png" alt="Card Image">
+            </div>
+            <div class="content">
+                <h2>Mitticool </h2>
+                <p>Elevate Your Business with an Impressive Online Store Built to Optimize Performance.</p>
+                <a href="https://mitticool.com/" class="btn">Visit</a>
+            </div>
+        </div>
+        <div class="container">
+            <div class="card">
+                <img src="image/s2.png" alt="Card Image">
+            </div>
+            <div class="content">
+                <h2>Haar Baarid</h2>
+                <p>Assist with web development for Haar Baarid and Alan's web development projects.</p>
+                <a href="https://haarbaarid.com/" class="btn">Visit</a>
+            </div>
+        </div>
+        <div class="container">
+            <div class="card">
+                <img src="image/s3.png" alt="Card Image">
+            </div>
+            <div class="content">
+                <h2>Aadisaktthi</h2>
+                <p>Lightweight design for Aadishakthi..</p>
+                <a href="https://www.adsresorts.in/" class="btn">Visit</a>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
